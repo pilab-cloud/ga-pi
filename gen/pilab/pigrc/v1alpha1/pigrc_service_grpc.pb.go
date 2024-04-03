@@ -47,21 +47,19 @@ func (c *piGRCServiceClient) CreateProject(ctx context.Context, in *CreateProjec
 }
 
 // PiGRCServiceServer is the server API for PiGRCService service.
-// All implementations must embed UnimplementedPiGRCServiceServer
+// All implementations should embed UnimplementedPiGRCServiceServer
 // for forward compatibility
 type PiGRCServiceServer interface {
 	CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error)
-	mustEmbedUnimplementedPiGRCServiceServer()
 }
 
-// UnimplementedPiGRCServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedPiGRCServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedPiGRCServiceServer struct {
 }
 
 func (UnimplementedPiGRCServiceServer) CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProject not implemented")
 }
-func (UnimplementedPiGRCServiceServer) mustEmbedUnimplementedPiGRCServiceServer() {}
 
 // UnsafePiGRCServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to PiGRCServiceServer will
