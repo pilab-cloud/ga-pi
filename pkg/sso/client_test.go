@@ -64,10 +64,10 @@ func TestClient_Login(t *testing.T) {
 	*offlineToken = "test-offline-token"
 
 	t.Run("TestSuccessfulLogin", func(t *testing.T) {
-		srv.EXPECT().Login(gomock.Any(), gomock.Any()).Return(
-			&sssov1.LoginResponse{
-				Response: &sssov1.LoginResponse_TokenResponse{
-					TokenResponse: &sssov1.AuthTokenResponse{
+		srv.EXPECT().Token(gomock.Any(), gomock.Any()).Return(
+			&sssov1.TokenResponse{
+				Response: &sssov1.TokenResponse_Tokens{
+					Tokens: &sssov1.TokensMessage{
 						AccessToken:  "test-token",
 						RefreshToken: "test-refresh-token",
 						OfflineToken: offlineToken,
@@ -82,14 +82,15 @@ func TestClient_Login(t *testing.T) {
 	})
 
 	t.Run("TestWrongPassword", func(t *testing.T) { // Test invalid login credentials
-		srv.EXPECT().Login(gomock.Any(), gomock.Any()).DoAndReturn(func(ctx context.Context, req *sssov1.LoginRequest) (*sssov1.LoginResponse, error) {
-			creds := req.GetPasswordAuth()
-			assert.NotNil(t, creds, "Credentials should not be nil")
-			assert.Equal(t, creds.Username, "test@example.com")
-			assert.Equal(t, creds.Password, "wrongpassword")
+		srv.EXPECT().Token(gomock.Any(), gomock.Any()).DoAndReturn(
+			func(ctx context.Context, req *sssov1.PasswordAuthMessage) (*sssov1.AuthActionRequiredMessage, error) {
+				assert.NotNil(t, req, "Credentials should not be nil")
+				assert.Equal(t, req.Username, "test@example.com")
+				assert.Equal(t, req.Password, "wrongpassword")
 
-			return nil, sso.ErrInvalidCredentials
-		})
+				return nil, sso.ErrInvalidCredentials
+			},
+		)
 
 		// srv.EXPECT().Login(gomock.Any(), gomock.Any()).Return(
 		// 	sso.ErrInvalidCredentials.ToLoginResponse(),

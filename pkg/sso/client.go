@@ -115,9 +115,13 @@ func (e *PiError) Error() string {
 
 // Login tries to login with the given credentials.
 func (c *Client) Login(ctx context.Context, realmID, clientID, username, password string) error {
-	message, err := c.sc.Login(ctx, &sssov1.LoginRequest{
-		Credentials: &sssov1.LoginRequest_PasswordAuth{
-			PasswordAuth: &sssov1.PasswordLoginRequest{
+	message, err := c.sc.Token(ctx, &sssov1.TokenRequest{
+		Client: &sssov1.TenantClientMessage{
+			Tenant:   realmID,
+			ClientId: clientID,
+		},
+		Credentials: &sssov1.TokenRequest_PasswordAuth{
+			PasswordAuth: &sssov1.PasswordAuthMessage{
 				Username: username,
 				Password: password,
 			},
@@ -128,19 +132,21 @@ func (c *Client) Login(ctx context.Context, realmID, clientID, username, passwor
 	}
 
 	switch r := message.GetResponse().(type) {
-	case *sssov1.LoginResponse_TokenResponse:
-		tokens := r.TokenResponse
+	case *sssov1.TokenResponse_Tokens:
+		tokens := r.Tokens
 		fmt.Printf("Login successful: %s\n", tokens.AccessToken)
-	case *sssov1.LoginResponse_ErrorResponse:
+	case *sssov1.TokenResponse_Error:
 		log.Printf("TraceID extraction not implemented yet")
 
 		err := &PiError{
-			Code:    fmt.Sprintf("%d", r.ErrorResponse.Code),
-			Message: r.ErrorResponse.Message,
+			Code:    fmt.Sprintf("%d", r.Error.Code),
+			Message: r.Error.Message,
 			TraceID: "",
 		}
 
-		return fmt.Errorf("%w: %s", err, r.ErrorResponse.Message)
+		return fmt.Errorf("%w: %s", err, r.Error.Message)
+	case *sssov1.TokenResponse_ActionRequired:
+		panic("Action Required case not implemented yet")
 	}
 
 	return nil

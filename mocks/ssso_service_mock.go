@@ -40,44 +40,64 @@ func (m *MockAuthServiceClient) EXPECT() *MockAuthServiceClientMockRecorder {
 	return m.recorder
 }
 
-// Login mocks base method.
-func (m *MockAuthServiceClient) Login(ctx context.Context, in *sssov1.LoginRequest, opts ...grpc.CallOption) (*sssov1.LoginResponse, error) {
+// EndSession mocks base method.
+func (m *MockAuthServiceClient) EndSession(ctx context.Context, in *sssov1.EndSessionRequest, opts ...grpc.CallOption) (*sssov1.EndSessionResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []any{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "Login", varargs...)
-	ret0, _ := ret[0].(*sssov1.LoginResponse)
+	ret := m.ctrl.Call(m, "EndSession", varargs...)
+	ret0, _ := ret[0].(*sssov1.EndSessionResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Login indicates an expected call of Login.
-func (mr *MockAuthServiceClientMockRecorder) Login(ctx, in any, opts ...any) *gomock.Call {
+// EndSession indicates an expected call of EndSession.
+func (mr *MockAuthServiceClientMockRecorder) EndSession(ctx, in any, opts ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]any{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockAuthServiceClient)(nil).Login), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EndSession", reflect.TypeOf((*MockAuthServiceClient)(nil).EndSession), varargs...)
 }
 
-// Logout mocks base method.
-func (m *MockAuthServiceClient) Logout(ctx context.Context, in *sssov1.LogoutRequest, opts ...grpc.CallOption) (*sssov1.LogoutResponse, error) {
+// Register mocks base method.
+func (m *MockAuthServiceClient) Register(ctx context.Context, in *sssov1.RegisterRequest, opts ...grpc.CallOption) (*sssov1.RegisterResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []any{ctx, in}
 	for _, a := range opts {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "Logout", varargs...)
-	ret0, _ := ret[0].(*sssov1.LogoutResponse)
+	ret := m.ctrl.Call(m, "Register", varargs...)
+	ret0, _ := ret[0].(*sssov1.RegisterResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Logout indicates an expected call of Logout.
-func (mr *MockAuthServiceClientMockRecorder) Logout(ctx, in any, opts ...any) *gomock.Call {
+// Register indicates an expected call of Register.
+func (mr *MockAuthServiceClientMockRecorder) Register(ctx, in any, opts ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]any{ctx, in}, opts...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logout", reflect.TypeOf((*MockAuthServiceClient)(nil).Logout), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockAuthServiceClient)(nil).Register), varargs...)
+}
+
+// Token mocks base method.
+func (m *MockAuthServiceClient) Token(ctx context.Context, in *sssov1.TokenRequest, opts ...grpc.CallOption) (*sssov1.TokenResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []any{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "Token", varargs...)
+	ret0, _ := ret[0].(*sssov1.TokenResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Token indicates an expected call of Token.
+func (mr *MockAuthServiceClientMockRecorder) Token(ctx, in any, opts ...any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]any{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Token", reflect.TypeOf((*MockAuthServiceClient)(nil).Token), varargs...)
 }
 
 // TokenRefresh mocks base method.
@@ -143,34 +163,49 @@ func (m *MockAuthServiceServer) EXPECT() *MockAuthServiceServerMockRecorder {
 	return m.recorder
 }
 
-// Login mocks base method.
-func (m *MockAuthServiceServer) Login(arg0 context.Context, arg1 *sssov1.LoginRequest) (*sssov1.LoginResponse, error) {
+// EndSession mocks base method.
+func (m *MockAuthServiceServer) EndSession(arg0 context.Context, arg1 *sssov1.EndSessionRequest) (*sssov1.EndSessionResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Login", arg0, arg1)
-	ret0, _ := ret[0].(*sssov1.LoginResponse)
+	ret := m.ctrl.Call(m, "EndSession", arg0, arg1)
+	ret0, _ := ret[0].(*sssov1.EndSessionResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Login indicates an expected call of Login.
-func (mr *MockAuthServiceServerMockRecorder) Login(arg0, arg1 any) *gomock.Call {
+// EndSession indicates an expected call of EndSession.
+func (mr *MockAuthServiceServerMockRecorder) EndSession(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockAuthServiceServer)(nil).Login), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EndSession", reflect.TypeOf((*MockAuthServiceServer)(nil).EndSession), arg0, arg1)
 }
 
-// Logout mocks base method.
-func (m *MockAuthServiceServer) Logout(arg0 context.Context, arg1 *sssov1.LogoutRequest) (*sssov1.LogoutResponse, error) {
+// Register mocks base method.
+func (m *MockAuthServiceServer) Register(arg0 context.Context, arg1 *sssov1.RegisterRequest) (*sssov1.RegisterResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Logout", arg0, arg1)
-	ret0, _ := ret[0].(*sssov1.LogoutResponse)
+	ret := m.ctrl.Call(m, "Register", arg0, arg1)
+	ret0, _ := ret[0].(*sssov1.RegisterResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Logout indicates an expected call of Logout.
-func (mr *MockAuthServiceServerMockRecorder) Logout(arg0, arg1 any) *gomock.Call {
+// Register indicates an expected call of Register.
+func (mr *MockAuthServiceServerMockRecorder) Register(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logout", reflect.TypeOf((*MockAuthServiceServer)(nil).Logout), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockAuthServiceServer)(nil).Register), arg0, arg1)
+}
+
+// Token mocks base method.
+func (m *MockAuthServiceServer) Token(arg0 context.Context, arg1 *sssov1.TokenRequest) (*sssov1.TokenResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Token", arg0, arg1)
+	ret0, _ := ret[0].(*sssov1.TokenResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Token indicates an expected call of Token.
+func (mr *MockAuthServiceServerMockRecorder) Token(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Token", reflect.TypeOf((*MockAuthServiceServer)(nil).Token), arg0, arg1)
 }
 
 // TokenRefresh mocks base method.

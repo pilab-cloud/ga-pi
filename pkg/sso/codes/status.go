@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2014 gRPC authors.
+ * Copyright 2024 Shadow SSO authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,9 @@ const (
 
 	// PermissionDenied when account has no permission to perform the operation.
 	PermissionDenied
+
+	// NoTenantOrClient when tenant or client is not found.
+	NoTenantOrClient
 
 	// Invalid when some invalid data is provided, or invalid operation is requested.
 	// This is a generic error code, use more specific code if possible.

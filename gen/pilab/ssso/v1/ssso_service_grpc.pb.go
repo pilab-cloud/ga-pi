@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_Login_FullMethodName         = "/pilab.ssso.v1.AuthService/Login"
+	AuthService_Token_FullMethodName         = "/pilab.ssso.v1.AuthService/Token"
 	AuthService_TokenRefresh_FullMethodName  = "/pilab.ssso.v1.AuthService/TokenRefresh"
-	AuthService_Logout_FullMethodName        = "/pilab.ssso.v1.AuthService/Logout"
+	AuthService_EndSession_FullMethodName    = "/pilab.ssso.v1.AuthService/EndSession"
 	AuthService_ValidateToken_FullMethodName = "/pilab.ssso.v1.AuthService/ValidateToken"
+	AuthService_Register_FullMethodName      = "/pilab.ssso.v1.AuthService/Register"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -33,18 +34,20 @@ type AuthServiceClient interface {
 	// is successful, the response contains the access token and the refresh
 	// token. When the authentication is failed, the response contains the error
 	// code and the error message.
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	Token(ctx context.Context, in *TokenRequest, opts ...grpc.CallOption) (*TokenResponse, error)
 	// Refresh the OAuth token with the given refresh token. When the refresh is
 	// successful, the response contains the new access token and the new refresh
 	// token. When the refresh is failed, the response contains the error code and
 	// the error message.
 	TokenRefresh(ctx context.Context, in *TokenRefreshRequest, opts ...grpc.CallOption) (*TokenRefreshResponse, error)
-	// Logout the user. When the logout is successful, the response is empty.
-	// When the logout is failed, the response contains the error code and the
+	// EndSession the user. When the EndSession is successful, the response is empty.
+	// When the EndSession is failed, the response contains the error code and the
 	// error message.
-	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	EndSession(ctx context.Context, in *EndSessionRequest, opts ...grpc.CallOption) (*EndSessionResponse, error)
 	// Validate the given token. When the token is valid, the response is empty.
 	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
+	// Register the user with the given credentials.
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 }
 
 type authServiceClient struct {
@@ -55,9 +58,9 @@ func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
 }
 
-func (c *authServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
-	out := new(LoginResponse)
-	err := c.cc.Invoke(ctx, AuthService_Login_FullMethodName, in, out, opts...)
+func (c *authServiceClient) Token(ctx context.Context, in *TokenRequest, opts ...grpc.CallOption) (*TokenResponse, error) {
+	out := new(TokenResponse)
+	err := c.cc.Invoke(ctx, AuthService_Token_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -73,9 +76,9 @@ func (c *authServiceClient) TokenRefresh(ctx context.Context, in *TokenRefreshRe
 	return out, nil
 }
 
-func (c *authServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
-	out := new(LogoutResponse)
-	err := c.cc.Invoke(ctx, AuthService_Logout_FullMethodName, in, out, opts...)
+func (c *authServiceClient) EndSession(ctx context.Context, in *EndSessionRequest, opts ...grpc.CallOption) (*EndSessionResponse, error) {
+	out := new(EndSessionResponse)
+	err := c.cc.Invoke(ctx, AuthService_EndSession_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -91,6 +94,15 @@ func (c *authServiceClient) ValidateToken(ctx context.Context, in *ValidateToken
 	return out, nil
 }
 
+func (c *authServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, AuthService_Register_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations should embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -99,35 +111,40 @@ type AuthServiceServer interface {
 	// is successful, the response contains the access token and the refresh
 	// token. When the authentication is failed, the response contains the error
 	// code and the error message.
-	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	Token(context.Context, *TokenRequest) (*TokenResponse, error)
 	// Refresh the OAuth token with the given refresh token. When the refresh is
 	// successful, the response contains the new access token and the new refresh
 	// token. When the refresh is failed, the response contains the error code and
 	// the error message.
 	TokenRefresh(context.Context, *TokenRefreshRequest) (*TokenRefreshResponse, error)
-	// Logout the user. When the logout is successful, the response is empty.
-	// When the logout is failed, the response contains the error code and the
+	// EndSession the user. When the EndSession is successful, the response is empty.
+	// When the EndSession is failed, the response contains the error code and the
 	// error message.
-	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	EndSession(context.Context, *EndSessionRequest) (*EndSessionResponse, error)
 	// Validate the given token. When the token is valid, the response is empty.
 	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
+	// Register the user with the given credentials.
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 }
 
 // UnimplementedAuthServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedAuthServiceServer struct {
 }
 
-func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+func (UnimplementedAuthServiceServer) Token(context.Context, *TokenRequest) (*TokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Token not implemented")
 }
 func (UnimplementedAuthServiceServer) TokenRefresh(context.Context, *TokenRefreshRequest) (*TokenRefreshResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TokenRefresh not implemented")
 }
-func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+func (UnimplementedAuthServiceServer) EndSession(context.Context, *EndSessionRequest) (*EndSessionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EndSession not implemented")
 }
 func (UnimplementedAuthServiceServer) ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
+}
+func (UnimplementedAuthServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 
 // UnsafeAuthServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -141,20 +158,20 @@ func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
 	s.RegisterService(&AuthService_ServiceDesc, srv)
 }
 
-func _AuthService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
+func _AuthService_Token_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).Login(ctx, in)
+		return srv.(AuthServiceServer).Token(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_Login_FullMethodName,
+		FullMethod: AuthService_Token_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Login(ctx, req.(*LoginRequest))
+		return srv.(AuthServiceServer).Token(ctx, req.(*TokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -177,20 +194,20 @@ func _AuthService_TokenRefresh_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LogoutRequest)
+func _AuthService_EndSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EndSessionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).Logout(ctx, in)
+		return srv.(AuthServiceServer).EndSession(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_Logout_FullMethodName,
+		FullMethod: AuthService_EndSession_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Logout(ctx, req.(*LogoutRequest))
+		return srv.(AuthServiceServer).EndSession(ctx, req.(*EndSessionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -213,6 +230,24 @@ func _AuthService_ValidateToken_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_Register_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -221,20 +256,24 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Login",
-			Handler:    _AuthService_Login_Handler,
+			MethodName: "Token",
+			Handler:    _AuthService_Token_Handler,
 		},
 		{
 			MethodName: "TokenRefresh",
 			Handler:    _AuthService_TokenRefresh_Handler,
 		},
 		{
-			MethodName: "Logout",
-			Handler:    _AuthService_Logout_Handler,
+			MethodName: "EndSession",
+			Handler:    _AuthService_EndSession_Handler,
 		},
 		{
 			MethodName: "ValidateToken",
 			Handler:    _AuthService_ValidateToken_Handler,
+		},
+		{
+			MethodName: "Register",
+			Handler:    _AuthService_Register_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

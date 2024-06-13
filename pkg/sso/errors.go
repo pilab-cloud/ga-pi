@@ -30,10 +30,10 @@ func (e *AuthError) Error() string {
 }
 
 // ToResponse returns the error as a LoginResponse.
-func (e *AuthError) ToLoginResponse() *sssov1.LoginResponse {
-	return &sssov1.LoginResponse{
-		Response: &sssov1.LoginResponse_ErrorResponse{
-			ErrorResponse: &sssov1.AuthErrorResponse{
+func (e *AuthError) ToResponse() *sssov1.TokenResponse {
+	return &sssov1.TokenResponse{
+		Response: &sssov1.TokenResponse_Error{
+			Error: &sssov1.ErrorMessage{
 				Code:    (int32)(e.Code),
 				Message: e.Message,
 			},
@@ -48,6 +48,7 @@ func (e *AuthError) WithParams(params any) *AuthError {
 }
 
 var (
+	ErrNoTenantOrClient   = newAuthError(codes.NoTenantOrClient, "no_tenant_or_client")
 	ErrUserNotFound       = newAuthError(codes.UserNotFound, "user_not_found")
 	ErrInvalidCredentials = newAuthError(codes.InvalidCredentials, "invalid_credentials")
 	ErrLocked             = newAuthError(codes.Locked, "account_locked")
